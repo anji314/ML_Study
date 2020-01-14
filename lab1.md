@@ -1,0 +1,413 @@
+```python
+print('Hello, world')
+```
+
+    Hello, world
+    
+
+
+```python
+
+```
+
+
+```python
+def f(a,b):
+    return a+b
+
+```
+
+
+```python
+f(1,2)
+
+```
+
+
+
+
+    3
+
+
+
+
+```python
+
+```
+
+
+```python
+
+```
+
+
+```python
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
+
+hello= tf.constant('hello tensorflow!')
+print(hello)
+```
+
+    WARNING:tensorflow:From c:\users\안지혜\appdata\local\programs\python\python36\lib\site-packages\tensorflow_core\python\compat\v2_compat.py:65: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+    Instructions for updating:
+    non-resource variables are not supported in the long term
+    Tensor("Const:0", shape=(), dtype=string)
+    
+
+
+```python
+a=tf.constant(10)
+```
+
+
+```python
+a=tf.constant(10)
+b=tf.constant(32)
+c=tf.add(a,b)
+print(c)
+```
+
+    Tensor("Add:0", shape=(), dtype=int32)
+    
+
+
+```python
+sess=tf.Session()
+print(sess.run(hello))
+print(sess.run([a,b,c]))
+```
+
+    b'hello tensorflow!'
+    [10, 32, 42]
+    
+
+
+```python
+print(c)
+```
+
+    Tensor("Add:0", shape=(), dtype=int32)
+    
+
+
+```python
+X=tf.placeholder(tf.float32,[None,3])
+print(X)
+```
+
+    Tensor("Placeholder:0", shape=(?, 3), dtype=float32)
+    
+
+
+```python
+x_data=[[1,2,3],[4,5,6]]
+```
+
+
+```python
+W=tf.Variable(tf.random_normal([3,2]))
+b=tf.Variable(tf.random_normal([2,1]))
+```
+
+
+```python
+expr=tf.marmul(x,W)+b
+```
+
+
+    ---------------------------------------------------------------------------
+
+    AttributeError                            Traceback (most recent call last)
+
+    <ipython-input-15-f852ff78dc8d> in <module>
+    ----> 1 expr=tf.marmul(x,W)+b
+    
+
+    AttributeError: module 'tensorflow_core.compat.v1' has no attribute 'marmul'
+
+
+
+```python
+sess.run(tf.global_variables_initializer())
+
+print("==x_data==")
+print(x_data)
+print("===W===")
+print(sess.run(W))
+print("===b===")
+print(sess.run(b))
+print("===expr===")
+print(sess.run(expt,feed_dict={X:x_data}))
+sess.close()
+```
+
+    ==x_data==
+    [[1, 2, 3], [4, 5, 6]]
+    ===W===
+    [[-1.5963199  -0.9463549 ]
+     [-0.56757915  0.4881241 ]
+     [-0.23096584 -1.7002412 ]]
+    ===b===
+    [[-0.486335 ]
+     [ 1.0353105]]
+    ===expr===
+    [[ -3.9107108  -5.557165 ]
+     [ -9.573659  -10.510936 ]]
+    
+
+
+```python
+W=tf.Variable([[1,2],[3,4][5,6]])
+sess.run(tf.global_variables_initializer())
+print("===W===")
+print(sess.run(W))
+
+```
+
+
+    ---------------------------------------------------------------------------
+
+    TypeError                                 Traceback (most recent call last)
+
+    <ipython-input-21-fb135f95e328> in <module>
+    ----> 1 W=tf.Variable([[1,2],[3,4][5,6]])
+          2 sess.run(tf.global_variables_initializer())
+          3 print("===W===")
+          4 print(sess.run(W))
+    
+
+    TypeError: list indices must be integers or slices, not tuple
+
+
+
+```python
+W=tf.Variable([[1,2],[3,4][5,6]])
+sess.run(tf.global_variables_initializer())
+print("===W===")
+print(sess.run(W))
+```
+
+
+    ---------------------------------------------------------------------------
+
+    TypeError                                 Traceback (most recent call last)
+
+    <ipython-input-22-fb135f95e328> in <module>
+    ----> 1 W=tf.Variable([[1,2],[3,4][5,6]])
+          2 sess.run(tf.global_variables_initializer())
+          3 print("===W===")
+          4 print(sess.run(W))
+    
+
+    TypeError: list indices must be integers or slices, not tuple
+
+
+
+```python
+W=tf.Variable([[1,2],[3,4],[5,6]])
+
+print("===W===")
+print(W)
+```
+
+    ===W===
+    <tf.Variable 'Variable_4:0' shape=(3, 2) dtype=int32_ref>
+    
+
+
+```python
+sess=tf.Session()
+W=tf.Variable([[1,2],[3,4],[5,6]])
+sess.run(tf.global_variables_initializer())
+print("===W===")
+print(sess.run(W))
+```
+
+    ===W===
+    [[1 2]
+     [3 4]
+     [5 6]]
+    
+
+
+```python
+
+
+
+
+```
+
+
+```python
+x_data=[1,2,3]
+y_data=[1,2,3]
+
+W=tf.Variable(tf.random_uniform([1],-1.0,1.0))
+b=tf.Variable(tf.random_uniform([1],-1.0,1.0))
+
+X=tf.placeholder(tf.float32,name="X")
+Y=tf.placeholder(tf.float32,name="Y")
+
+hypothesis=W*X+b
+
+cost=tf.reduce_mean(tf.square(hypothesis-Y))
+optimizer=tf.train.GradientDescentOptimizer(learning_rate=0.1)
+train_op=optimizer.minimize(cost)
+
+with tf.Session() as sess:
+    sess.run(tf.global_variables_initializer())
+    
+    for step in range(100):
+        cost_val=sess.run([train_op,cost],feed_dict={X:x_data,Y:y_data})
+        
+        print(step,cost_val,sess.run(W),sess.run(b))
+        
+    print("\n====test====")
+    print("X:5,Y:",sess.run(hypothesis,feed_dict={X:5}))
+    print("X:2.5 ,Y:",sess.run(hypothesis,feed_dict={X:2.5}))
+
+    
+print("X:5,Y:",sess.run(hypothesis,feed_dict={X:5}))
+```
+
+    0 [None, 0.33694065] [0.79804826] [0.52194566]
+    1 [None, 0.04112364] [0.77775824] [0.4983372]
+    2 [None, 0.03582779] [0.785849] [0.48756647]
+    3 [None, 0.03408606] [0.7906967] [0.47571358]
+    4 [None, 0.032466456] [0.795761] [0.4642922]
+    5 [None, 0.03092427] [0.80066717] [0.45312935]
+    6 [None, 0.029455371] [0.80545944] [0.44223663]
+    7 [None, 0.02805619] [0.810136] [0.43160555]
+    8 [None, 0.026723498] [0.8147002] [0.42123005]
+    9 [None, 0.025454104] [0.8191547] [0.41110396]
+    10 [None, 0.024245039] [0.82350206] [0.4012213]
+    11 [None, 0.023093373] [0.82774496] [0.39157623]
+    12 [None, 0.02199643] [0.8318858] [0.382163]
+    13 [None, 0.020951582] [0.8359272] [0.37297606]
+    14 [None, 0.01995637] [0.8398714] [0.36400998]
+    15 [None, 0.019008424] [0.8437208] [0.35525945]
+    16 [None, 0.018105512] [0.8474776] [0.34671926]
+    17 [None, 0.0172455] [0.85114413] [0.33838436]
+    18 [None, 0.016426297] [0.8547225] [0.33024985]
+    19 [None, 0.015646042] [0.8582149] [0.3223109]
+    20 [None, 0.01490284] [0.8616233] [0.31456274]
+    21 [None, 0.014194959] [0.86494976] [0.30700088]
+    22 [None, 0.013520676] [0.86819625] [0.29962078]
+    23 [None, 0.012878436] [0.8713648] [0.29241812]
+    24 [None, 0.01226671] [0.8744571] [0.28538862]
+    25 [None, 0.011684023] [0.877475] [0.27852803]
+    26 [None, 0.011129024] [0.8804205] [0.27183244]
+    27 [None, 0.010600381] [0.88329506] [0.26529774]
+    28 [None, 0.01009687] [0.8861006] [0.2589202]
+    29 [None, 0.009617246] [0.88883865] [0.25269592]
+    30 [None, 0.009160427] [0.8915109] [0.24662128]
+    31 [None, 0.008725302] [0.8941189] [0.24069266]
+    32 [None, 0.008310835] [0.8966642] [0.23490657]
+    33 [None, 0.007916067] [0.8991483] [0.22925957]
+    34 [None, 0.007540053] [0.9015727] [0.22374834]
+    35 [None, 0.007181891] [0.90393883] [0.21836957]
+    36 [None, 0.006840749] [0.9062481] [0.21312013]
+    37 [None, 0.0065158047] [0.9085018] [0.20799686]
+    38 [None, 0.0062063113] [0.9107014] [0.20299676]
+    39 [None, 0.0059114923] [0.91284806] [0.19811685]
+    40 [None, 0.005630698] [0.9149431] [0.19335426]
+    41 [None, 0.0053632376] [0.91698784] [0.18870616]
+    42 [None, 0.005108483] [0.9189834] [0.1841698]
+    43 [None, 0.004865829] [0.920931] [0.17974247]
+    44 [None, 0.0046346835] [0.9228317] [0.17542157]
+    45 [None, 0.004414544] [0.92468685] [0.17120458]
+    46 [None, 0.004204853] [0.9264973] [0.16708893]
+    47 [None, 0.004005108] [0.92826426] [0.16307223]
+    48 [None, 0.0038148686] [0.9299887] [0.15915208]
+    49 [None, 0.00363366] [0.93167174] [0.15532619]
+    50 [None, 0.003461058] [0.9333143] [0.15159225]
+    51 [None, 0.003296654] [0.9349174] [0.14794807]
+    52 [None, 0.0031400656] [0.93648195] [0.1443915]
+    53 [None, 0.0029909064] [0.93800884] [0.14092042]
+    54 [None, 0.0028488368] [0.9394991] [0.13753279]
+    55 [None, 0.0027135166] [0.9409535] [0.1342266]
+    56 [None, 0.0025846178] [0.9423729] [0.1309999]
+    57 [None, 0.002461848] [0.94375825] [0.12785076]
+    58 [None, 0.0023449094] [0.94511026] [0.1247773]
+    59 [None, 0.0022335218] [0.9464298] [0.12177775]
+    60 [None, 0.002127425] [0.94771755] [0.11885029]
+    61 [None, 0.0020263821] [0.94897443] [0.11599322]
+    62 [None, 0.0019301167] [0.950201] [0.11320481]
+    63 [None, 0.0018384418] [0.9513982] [0.11048347]
+    64 [None, 0.0017511122] [0.9525665] [0.10782749]
+    65 [None, 0.0016679381] [0.9537068] [0.10523541]
+    66 [None, 0.0015887045] [0.9548196] [0.1027056]
+    67 [None, 0.0015132359] [0.95590574] [0.10023663]
+    68 [None, 0.0014413557] [0.95696574] [0.09782702]
+    69 [None, 0.0013728944] [0.95800024] [0.09547531]
+    70 [None, 0.0013076795] [0.9590099] [0.09318016]
+    71 [None, 0.0012455651] [0.95999527] [0.09094017]
+    72 [None, 0.0011863968] [0.96095693] [0.08875402]
+    73 [None, 0.001130049] [0.9618956] [0.08662046]
+    74 [None, 0.0010763626] [0.96281147] [0.08453811]
+    75 [None, 0.0010252366] [0.9637055] [0.08250588]
+    76 [None, 0.0009765381] [0.96457803] [0.08052251]
+    77 [None, 0.00093015464] [0.96542954] [0.0785868]
+    78 [None, 0.00088596944] [0.96626055] [0.07669762]
+    79 [None, 0.00084388256] [0.96707165] [0.07485387]
+    80 [None, 0.00080379844] [0.9678632] [0.07305443]
+    81 [None, 0.0007656182] [0.9686358] [0.07129826]
+    82 [None, 0.0007292498] [0.96938974] [0.06958428]
+    83 [None, 0.00069460954] [0.97012556] [0.06791152]
+    84 [None, 0.0006616173] [0.97084373] [0.06627899]
+    85 [None, 0.0006301918] [0.9715447] [0.0646857]
+    86 [None, 0.0006002561] [0.97222877] [0.06313071]
+    87 [None, 0.00057174376] [0.97289634] [0.06161307]
+    88 [None, 0.0005445843] [0.9735479] [0.06013191]
+    89 [None, 0.00051871623] [0.97418374] [0.05868638]
+    90 [None, 0.00049407734] [0.9748044] [0.05727562]
+    91 [None, 0.00047060873] [0.97541004] [0.05589874]
+    92 [None, 0.00044825338] [0.97600114] [0.05455498]
+    93 [None, 0.000426962] [0.9765781] [0.05324354]
+    94 [None, 0.0004066804] [0.97714114] [0.05196358]
+    95 [None, 0.00038736223] [0.97769064] [0.05071441]
+    96 [None, 0.00036896253] [0.97822696] [0.04949527]
+    97 [None, 0.00035143676] [0.97875035] [0.04830543]
+    98 [None, 0.00033474047] [0.97926116] [0.04714419]
+    99 [None, 0.00031884215] [0.97975975] [0.04601089]
+    
+    ====test====
+    X:5,Y: [4.94481]
+    X:2.5 ,Y: [2.4954104]
+    
+
+
+    ---------------------------------------------------------------------------
+
+    RuntimeError                              Traceback (most recent call last)
+
+    <ipython-input-34-086d55cd3de5> in <module>
+         27 
+         28 
+    ---> 29 print("X:5,Y:",sess.run(hypothesis,feed_dict={X:5}))
+    
+
+    c:\users\안지혜\appdata\local\programs\python\python36\lib\site-packages\tensorflow_core\python\client\session.py in run(self, fetches, feed_dict, options, run_metadata)
+        954     try:
+        955       result = self._run(None, fetches, feed_dict, options_ptr,
+    --> 956                          run_metadata_ptr)
+        957       if run_metadata:
+        958         proto_data = tf_session.TF_GetBuffer(run_metadata_ptr)
+    
+
+    c:\users\안지혜\appdata\local\programs\python\python36\lib\site-packages\tensorflow_core\python\client\session.py in _run(self, handle, fetches, feed_dict, options, run_metadata)
+       1101     # Check session.
+       1102     if self._closed:
+    -> 1103       raise RuntimeError('Attempted to use a closed Session.')
+       1104     if self.graph.version == 0:
+       1105       raise RuntimeError('The Session graph is empty.  Add operations to the '
+    
+
+    RuntimeError: Attempted to use a closed Session.
+
+
+
+```python
+
+```
