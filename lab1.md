@@ -41,9 +41,9 @@ f(1,2)
 
 ```
 
+- - -
 
-
-## 1.1텐서와 그래프 실행
+## 1.1 텐서와 그래프 실행
 ### 1.  텐서 플로를 사용하기위해 텐서플로 라이브러리를 임포트.
 다운 받은 버젼은 2.x 버젼이기때문에 2.x 버젼에서 1.x의 문법을 사용하기 위한 코드이다.
 
@@ -106,27 +106,37 @@ print(sess.run([a,b,c]))
     
    
 
+- - -
+## 1.2 플레이스홀더와 변수
 
+* 플레이스 홀더 : 그래프에 사용할 입력값을 나중에 지정 하기 위해 사용하는 매개 변수.
+* 변수 : 그래프를 최적화하기위해 텐서플로(학습 함수들)가 학습한 결과를 갱신하기 위해 사용하는 변수. - 신경망의 성능을 결정한다.      
+### 1.플레이스 홀더 선언
 ```python
-X=tf.placeholder(tf.float32,[None,3])
+X=tf.placeholder(tf.float32,[None,3]) // None은 크기가 정해지지 않았음을 의미.
 print(X)
 ```
+결과
 
     Tensor("Placeholder:0", shape=(?, 3), dtype=float32)
     
-
+### 2.플레이스 홀더X에 넣을 자료를 정의
+X의 텐서모양이 (?,3) 이므로 두번째 차원은 요소를 3개씩 가지고 있어야한다.(첫번째 차원의 개수는 상관x)
 
 ```python
 x_data=[[1,2,3],[4,5,6]]
 ```
 
+### 3.변수 생성후 할당
+tf.random_normal함수를 이용해 정규 분호의 무작위 값으로 초기화를 한다.    
+W=tf.Variable([0.1,0.1],[0.2,0.2],[0.3,0.3])과 같이 직접 넣어도 가능하다.
 
 ```python
 W=tf.Variable(tf.random_normal([3,2]))
 b=tf.Variable(tf.random_normal([2,1]))
 ```
 
-
+### 4.행렬곱을 수행할때는 tf.matmul함수를 사용해야한다.
 ```python
 expr=tf.marmul(x,W)+b
 ```
@@ -143,7 +153,9 @@ expr=tf.marmul(x,W)+b
     AttributeError: module 'tensorflow_core.compat.v1' has no attribute 'marmul'
 
 
-
+### 5.그래프 실행
+tf.global_variables_initializer() : 앞에서 정의한 변수들을 초기화 하는 함수. 초기화하지 않으면 오류가 난다.
+feed_dict={X:x_data} : 그래프를 실행할때 사용할 입력 값을 지정한다. 지정하지 않으면 오류가 난다.
 ```python
 sess.run(tf.global_variables_initializer())
 
@@ -157,6 +169,8 @@ print("===expr===")
 print(sess.run(expt,feed_dict={X:x_data}))
 sess.close()
 ```
+
+결과
 
     ==x_data==
     [[1, 2, 3], [4, 5, 6]]
@@ -172,89 +186,7 @@ sess.close()
      [ -9.573659  -10.510936 ]]
     
 
-
-```python
-W=tf.Variable([[1,2],[3,4][5,6]])
-sess.run(tf.global_variables_initializer())
-print("===W===")
-print(sess.run(W))
-
-```
-
-
-    ---------------------------------------------------------------------------
-
-    TypeError                                 Traceback (most recent call last)
-
-    <ipython-input-21-fb135f95e328> in <module>
-    ----> 1 W=tf.Variable([[1,2],[3,4][5,6]])
-          2 sess.run(tf.global_variables_initializer())
-          3 print("===W===")
-          4 print(sess.run(W))
-    
-
-    TypeError: list indices must be integers or slices, not tuple
-
-
-
-```python
-W=tf.Variable([[1,2],[3,4][5,6]])
-sess.run(tf.global_variables_initializer())
-print("===W===")
-print(sess.run(W))
-```
-
-
-    ---------------------------------------------------------------------------
-
-    TypeError                                 Traceback (most recent call last)
-
-    <ipython-input-22-fb135f95e328> in <module>
-    ----> 1 W=tf.Variable([[1,2],[3,4][5,6]])
-          2 sess.run(tf.global_variables_initializer())
-          3 print("===W===")
-          4 print(sess.run(W))
-    
-
-    TypeError: list indices must be integers or slices, not tuple
-
-
-
-```python
-W=tf.Variable([[1,2],[3,4],[5,6]])
-
-print("===W===")
-print(W)
-```
-
-    ===W===
-    <tf.Variable 'Variable_4:0' shape=(3, 2) dtype=int32_ref>
-    
-
-
-```python
-sess=tf.Session()
-W=tf.Variable([[1,2],[3,4],[5,6]])
-sess.run(tf.global_variables_initializer())
-print("===W===")
-print(sess.run(W))
-```
-
-    ===W===
-    [[1 2]
-     [3 4]
-     [5 6]]
-    
-
-
-```python
-
-
-
-
-```
-
-
+## 3.3 선형 회귀 모델 구현하기
 ```python
 x_data=[1,2,3]
 y_data=[1,2,3]
