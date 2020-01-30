@@ -1,3 +1,4 @@
+## 파이썬 실행해보기
 ```python
 print('Hello, world')
 ```
@@ -39,7 +40,9 @@ f(1,2)
 ```python
 
 ```
-
+## 1.1텐서와 그래프 실행
+1.  텐서 플로를 사용하기위해 텐서플로 라이브러리를 임포트.
+다운 받은 버젼은 2.x 버젼이기때문에 2.x 버젼에서 1.x의 문법을 사용하기 위한 코드이다.
 
 ```python
 import tensorflow.compat.v1 as tf
@@ -48,19 +51,20 @@ tf.disable_v2_behavior()
 hello= tf.constant('hello tensorflow!')
 print(hello)
 ```
+ hello 변수값을 출력한 결과로, hello가 텐서플로의 텐서라는 자료형이고, 상수를 담고있다.(경고는 무시)
 
     WARNING:tensorflow:From c:\users\안지혜\appdata\local\programs\python\python36\lib\site-packages\tensorflow_core\python\compat\v2_compat.py:65: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
     Instructions for updating:
     non-resource variables are not supported in the long term
     Tensor("Const:0", shape=(), dtype=string)
     
+> 텐서 : 다양한 수학식을 계산하기 위한 가장 기본적이고 중요한 자료형. 텐서의 자료형은 배열과 비슷하다.
+> * 랭크 : 차원의 수를 나타내는 것으로 0이면 스칼라, 1이면 벡터, 2이면 행렬,3이상이면 n-Tensor 또는 n차원 텐서라고 부른다.
+> * 셰이프 : 각 차원의 요소의 개수. 텐서의 구조를 설명해준다.
 
 
-```python
-a=tf.constant(10)
-```
-
-
+2. 텐서를 이용해 다양한 연산을 수행할 수 있다.(덧셈 예시)
+   일반적으로는 42가 나올것을 예상하지만 프린트된 값은 텐서의 형태를 출력한다.
 ```python
 a=tf.constant(10)
 b=tf.constant(32)
@@ -70,7 +74,7 @@ print(c)
 
     Tensor("Add:0", shape=(), dtype=int32)
     
-
+> 이유: 텐서 플로 프로그램의 구조가 1.그래프 생성  2.그래프 실행 이 두가지로 분리 되어 있기 때문.
 
 ```python
 sess=tf.Session()
