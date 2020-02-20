@@ -124,7 +124,9 @@ print('최적화 완료!')
 
 ```python
 sample_size=10
-
+```
+decoder을 부르고,입력 값을 X에 지정해서 넣으면 decoder를 실행시키기 위해 encoder를 부른다.     encoder의 입력값인 X에 지정한 입력 데이터가 들어간다.
+```
 samples=sess.run(decoder,feed_dict={X:mnist.test.images[:sample_size]})
 
 fig,ax=plt.subplots(2,sample_size,figsize=(sample_size,2))
